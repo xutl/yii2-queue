@@ -74,14 +74,21 @@ class Queue extends \yii\queue\cli\Queue
      */
     public function run()
     {
-        while ($payload = $this->getQueue()->receiveMessage()) {
-            $receiptHandle = $payload->getReceiptHandle();
-            if ($this->handleMessage($payload->getMessageId(), $payload->getMessageBody(),
-                $payload->getNextVisibleTime(),
-                $payload->getDequeueCount()
-            )) {
-                $this->getQueue()->deleteMessage($receiptHandle);
+        try {
+            while ($payload = $this->getQueue()->receiveMessage()) {
+                if ($payload->isSucceed()) {
+                    $receiptHandle = $payload->getReceiptHandle();
+                    if ($this->handleMessage(
+                        $payload->getMessageId(),
+                        $payload->getMessageBody(),
+                        $payload->getNextVisibleTime(),
+                        $payload->getDequeueCount()
+                    )) {
+                        $this->getQueue()->deleteMessage($receiptHandle);
+                    }
+                }
             }
+        } catch (MnsException $e) {
         }
     }
 
@@ -91,14 +98,21 @@ class Queue extends \yii\queue\cli\Queue
     public function listen()
     {
         while (!Signal::isExit()) {
-            if ($payload = $this->getQueue()->receiveMessage(3)) {
-                $receiptHandle = $payload->getReceiptHandle();
-                if ($this->handleMessage($payload->getMessageId(), $payload->getMessageBody(),
-                    $payload->getNextVisibleTime(),
-                    $payload->getDequeueCount()
-                )) {
-                    $this->getQueue()->deleteMessage($receiptHandle);
+            try {
+                if ($payload = $this->getQueue()->receiveMessage(3)) {
+                    if ($payload->isSucceed()) {
+                        $receiptHandle = $payload->getReceiptHandle();
+                        if ($this->handleMessage(
+                            $payload->getMessageId(),
+                            $payload->getMessageBody(),
+                            $payload->getNextVisibleTime(),
+                            $payload->getDequeueCount()
+                        )) {
+                            $this->getQueue()->deleteMessage($receiptHandle);
+                        }
+                    }
                 }
+            } catch (MnsException $e) {
             }
         }
     }
