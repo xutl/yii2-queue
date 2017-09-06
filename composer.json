@@ -1,0 +1,27 @@
+{
+  "name": "xutl/yii2-queue",
+  "description": "The aliyun queue extension for the Yii framework",
+  "keywords": [
+    "yii2",
+    "message",
+    "queue",
+    "aliyun"
+  ],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "X TL",
+      "email": "xtl@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.6",
+    "xutl/AliyunMNS": "~1.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "xutl\\queue\\": ""
+    }
+  }
+}
