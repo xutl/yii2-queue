@@ -1,1 +1,53 @@
-# yii2-queue
+# Aliyun Queue Extension for Yii 2
+
+
+[![Latest Stable Version](https://poser.pugx.org/xutl/yii2-queue/v/stable.png)](https://packagist.org/packages/xutl/yii2-queue)
+[![Total Downloads](https://poser.pugx.org/xutl/yii2-queue/downloads.png)](https://packagist.org/packages/xutl/yii2-queue)
+[![Reference Status](https://www.versioneye.com/php/xutl:yii2-queue/reference_badge.svg)](https://www.versioneye.com/php/xutl:yii2-queue/references)
+[![Dependency Status](https://www.versioneye.com/php/xutl:yii2-queue/dev-master/badge.png)](https://www.versioneye.com/php/xutl:yii2-queue/dev-master)
+[![License](https://poser.pugx.org/xutl/yii2-queue/license.svg)](https://packagist.org/packages/xutl/yii2-queue)
+
+
+Installation
+------------
+
+Next steps will guide you through the process of installing yii2-admin using [composer](http://getcomposer.org/download/). Installation is a quick and easy three-step process.
+
+### Step 1: Install component via composer
+
+Either run
+
+```
+composer require --prefer-dist xutl/yii2-queue
+```
+
+or add
+
+```json
+"xutl/yii2-queue": "~1.0.0"
+```
+
+to the `require` section of your composer.json.
+
+### Step 2: Configuring your application
+
+Add following lines to your main configuration file:
+
+```php
+    'components' => [
+        'queue' => [
+            'class' => 'xutl\queue\Queue',
+            'endPoint' => 'http://aabbcc.mns.cn-hangzhou.aliyuncs.com/',
+            'accessId' => '1234567',
+            'accessKey' => '654141234',
+            'queue' => 'task',
+        ],
+    ],
+```
+
+Read [https://github.com/yiisoft/yii2-queue/blob/master/docs/guide/README.md](https://github.com/yiisoft/yii2-queue/blob/master/docs/guide/README.md) to continue
+
+## License
+
+This is released under the MIT License. See the bundled [LICENSE.md](LICENSE.md)
+for details.
