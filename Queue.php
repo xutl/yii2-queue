@@ -1,20 +1,25 @@
 <?php
+
 namespace xutl\queue;
 
-use yii\base\InvalidParamException;
-use yii\queue\cli\Queue as CliQueue;
 use yii\queue\cli\Signal;
+use yii\base\InvalidParamException;
+use yii\base\NotSupportedException;
+use yii\base\InvalidConfigException;
 use AliyunMNS\Config;
 use AliyunMNS\Http\HttpClient;
-use AliyunMNS\Queue as QueueBackend;
 use AliyunMNS\Requests\SendMessageRequest;
 use AliyunMNS\Exception\MnsException;
 use AliyunMNS\Model\SendMessageRequestItem;
 use AliyunMNS\Requests\BatchSendMessageRequest;
 
-class Queue extends CliQueue 
+/**
+ * Class Queue
+ * @package xutl\queue
+ */
+class Queue extends \yii\queue\cli\Queue
 {
-  /**
+    /**
      * @var  string
      */
     public $endPoint;
@@ -30,26 +35,21 @@ class Queue extends CliQueue
     public $accessKey;
 
     /**
+     * @var string queue name
+     */
+    public $queue;
+
+    /**
      * @var null|string
      */
     public $securityToken = null;
 
     /**
-     * @var null|Config
-     */
-    public $config = null;
-
-    /**
-     * @var HttpClient
-     */
-    private $client;
-
-    /**
      * @var bool 是否开启Base 64
      */
-    public $base64 = true;
-  
-  /**
+    public $base64 = false;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -64,20 +64,77 @@ class Queue extends CliQueue
         if (empty ($this->accessKey)) {
             throw new InvalidConfigException ('The "accessKey" property must be set.');
         }
-        $this->client = new HttpClient($this->endPoint, $this->accessId, $this->accessKey, $this->securityToken, $this->config);
+        if (empty ($this->queue)) {
+            throw new InvalidConfigException ('The "queue" property must be set.');
+        }
     }
-  
-  /**
-     * 获取队列
-     * @param string $queueName
-     * @return Queue
+
+    /**
+     * Runs all jobs from queue.
      */
-    public function getQueueRef($queueName)
+    public function run()
     {
-        return new QueueBackend([
-            'client' => $this->client,
-            'queueName' => $queueName,
-            'base64' => $this->base64
-        ]);
+        while ($payload = $this->getQueue()->receiveMessage()) {
+            $receiptHandle = $payload->getReceiptHandle();
+            if ($this->handleMessage($payload->getMessageId(), $payload->getMessageBody(),
+                $payload->getNextVisibleTime(),
+                $payload->getDequeueCount()
+            )) {
+                $this->getQueue()->deleteMessage($receiptHandle);
+            }
+        }
+    }
+
+    /**
+     * Listens queue and runs new jobs.
+     */
+    public function listen()
+    {
+        while (!Signal::isExit()) {
+            if ($payload = $this->getQueue()->receiveMessage(3)) {
+                $receiptHandle = $payload->getReceiptHandle();
+                if ($this->handleMessage($payload->getMessageId(), $payload->getMessageBody(),
+                    $payload->getNextVisibleTime(),
+                    $payload->getDequeueCount()
+                )) {
+                    $this->getQueue()->deleteMessage($receiptHandle);
+                }
+            }
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function pushMessage($message, $ttr, $delay, $priority)
+    {
+        $request = new SendMessageRequest($message, $delay, $priority, $this->base64);
+        return $this->getQueue()->sendMessage($request);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function status($id)
+    {
+        throw new NotSupportedException('Status is not supported in the driver.');
+    }
+
+    /**
+     * @var \AliyunMNS\Queue
+     */
+    private $_aliyun;
+
+    /**
+     * 获取队列
+     * @return \AliyunMNS\Queue
+     */
+    public function getQueue()
+    {
+        if (!$this->_aliyun) {
+            $client = new HttpClient($this->endPoint, $this->accessId, $this->accessKey, $this->securityToken);
+            $this->_aliyun = new \AliyunMNS\Queue($client, $this->queue, $this->base64);
+        }
+        return $this->_aliyun;
     }
 }

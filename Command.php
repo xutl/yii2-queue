@@ -1,4 +1,5 @@
 <?php
+
 namespace xutl\queue;
 
 use yii\queue\cli\Command as CliCommand;
@@ -9,8 +10,8 @@ class Command extends CliCommand
      * @var Queue
      */
     public $queue;
-  
-  /**
+
+    /**
      * Runs all jobs from beanstalk-queue.
      * It can be used as cron job.
      */
