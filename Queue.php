@@ -45,9 +45,9 @@ class Queue extends \yii\queue\cli\Queue
     public $securityToken = null;
 
     /**
-     * @var bool 是否开启Base 64
+     * @var string command class name
      */
-    public $base64 = false;
+    public $commandClass = Command::class;
 
     /**
      * @inheritdoc
@@ -108,8 +108,8 @@ class Queue extends \yii\queue\cli\Queue
      */
     protected function pushMessage($message, $ttr, $delay, $priority)
     {
-        $request = new SendMessageRequest($message, $delay, $priority, $this->base64);
-        return $this->getQueue()->sendMessage($request);
+        $payload = new SendMessageRequest($message, $delay, $priority, false);
+        return $this->getQueue()->sendMessage($payload);
     }
 
     /**
@@ -133,7 +133,7 @@ class Queue extends \yii\queue\cli\Queue
     {
         if (!$this->_aliyun) {
             $client = new HttpClient($this->endPoint, $this->accessId, $this->accessKey, $this->securityToken);
-            $this->_aliyun = new \AliyunMNS\Queue($client, $this->queue, $this->base64);
+            $this->_aliyun = new \AliyunMNS\Queue($client, $this->queue, false);
         }
         return $this->_aliyun;
     }

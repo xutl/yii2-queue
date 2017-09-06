@@ -4,6 +4,10 @@ namespace xutl\queue;
 
 use yii\queue\cli\Command as CliCommand;
 
+/**
+ * Class Command
+ * @package xutl\queue
+ */
 class Command extends CliCommand
 {
     /**
