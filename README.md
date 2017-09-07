@@ -7,7 +7,7 @@
 [![Dependency Status](https://www.versioneye.com/php/xutl:yii2-queue/dev-master/badge.png)](https://www.versioneye.com/php/xutl:yii2-queue/dev-master)
 [![License](https://poser.pugx.org/xutl/yii2-queue/license.svg)](https://packagist.org/packages/xutl/yii2-queue)
 
-这个扩展是给官方原版的 yii2-queue 增加了阿里云的 消息队列驱动，只有队列，没有主题。
+这个扩展是给官方原版的 yii2-queue 增加了阿里云的 消息队列驱动，只有队列，没有主题。按下面说明配置上以后，就可以按照官方原版的说明开始使用即可。
 
 Installation
 ------------
