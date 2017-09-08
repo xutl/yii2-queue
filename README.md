@@ -3,7 +3,6 @@
 
 [![Latest Stable Version](https://poser.pugx.org/xutl/yii2-queue/v/stable.png)](https://packagist.org/packages/xutl/yii2-queue)
 [![Total Downloads](https://poser.pugx.org/xutl/yii2-queue/downloads.png)](https://packagist.org/packages/xutl/yii2-queue)
-[![Reference Status](https://www.versioneye.com/php/xutl:yii2-queue/reference_badge.svg)](https://www.versioneye.com/php/xutl:yii2-queue/references)
 [![Dependency Status](https://www.versioneye.com/php/xutl:yii2-queue/dev-master/badge.png)](https://www.versioneye.com/php/xutl:yii2-queue/dev-master)
 [![License](https://poser.pugx.org/xutl/yii2-queue/license.svg)](https://packagist.org/packages/xutl/yii2-queue)
 
