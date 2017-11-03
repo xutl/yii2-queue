@@ -1,5 +1,5 @@
 {
-  "name": "xutl/yii2-queue",
+  "name": "xutl/yii2-queue-aliyun",
   "description": "The aliyun queue extension for the Yii framework",
   "keywords": [
     "yii2",
