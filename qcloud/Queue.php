@@ -1,13 +1,10 @@
 <?php
 
-namespace xutl\queue\aliyun;
+namespace xutl\queue\qcloud;
 
 use yii\queue\cli\Signal;
 use yii\base\NotSupportedException;
 use yii\base\InvalidConfigException;
-use AliyunMNS\Http\HttpClient;
-use AliyunMNS\Requests\SendMessageRequest;
-use AliyunMNS\Exception\MnsException;
 
 /**
  * Class Queue
@@ -18,7 +15,7 @@ class Queue extends \yii\queue\cli\Queue
     /**
      * @var  string
      */
-    public $endPoint;
+    public $endPoint = 'cmq-queue-region.api.qcloud.com';
 
     /**
      * @var string
@@ -33,7 +30,7 @@ class Queue extends \yii\queue\cli\Queue
     /**
      * @var string queue name
      */
-    public $queue;
+    public $queueName;
 
     /**
      * @var null|string
@@ -130,10 +127,7 @@ class Queue extends \yii\queue\cli\Queue
         throw new NotSupportedException('Status is not supported in the driver.');
     }
 
-    /**
-     * @var \AliyunMNS\Queue
-     */
-    private $_aliyun;
+    private $_qcloud;
 
     /**
      * 获取队列
@@ -141,10 +135,10 @@ class Queue extends \yii\queue\cli\Queue
      */
     public function getQueue()
     {
-        if (!$this->_aliyun) {
+        if (!$this->_qcloud) {
             $client = new HttpClient($this->endPoint, $this->accessId, $this->accessKey, $this->securityToken);
-            $this->_aliyun = new \AliyunMNS\Queue($client, $this->queue, false);
+            $this->_qcloud = new \AliyunMNS\Queue($client, $this->queueName, false);
         }
-        return $this->_aliyun;
+        return $this->_qcloud;
     }
 }

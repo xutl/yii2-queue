@@ -1,6 +1,6 @@
 <?php
 
-namespace xutl\queue\aliyun;
+namespace xutl\queue\qcloud;
 
 use yii\queue\cli\Command as CliCommand;
 
