@@ -13,19 +13,25 @@ use yii\base\InvalidConfigException;
 class Queue extends \yii\queue\cli\Queue
 {
     /**
-     * @var  string
+     * @var string 服务主机名
      */
-    public $endPoint = 'cmq-queue-region.api.qcloud.com';
+    public $serverHost;
+
+    /**
+     * 区域参数
+     * @var string
+     */
+    public $region;
 
     /**
      * @var string
      */
-    public $accessId;
+    public $secretId;
 
     /**
      * @var string
      */
-    public $accessKey;
+    public $secretKey;
 
     /**
      * @var string queue name
@@ -33,9 +39,9 @@ class Queue extends \yii\queue\cli\Queue
     public $queueName;
 
     /**
-     * @var null|string
+     * @var bool 是否使用安全连接
      */
-    public $securityToken = null;
+    public $secureConnection = true;
 
     /**
      * @var string command class name
@@ -48,17 +54,17 @@ class Queue extends \yii\queue\cli\Queue
     public function init()
     {
         parent::init();
-        if (empty ($this->endPoint)) {
-            throw new InvalidConfigException ('The "endPoint" property must be set.');
+        if (empty ($this->serverHost)) {
+            throw new InvalidConfigException ('The "serverHost" property must be set.');
         }
-        if (empty ($this->accessId)) {
-            throw new InvalidConfigException ('The "accessId" property must be set.');
+        if (empty ($this->secretId)) {
+            throw new InvalidConfigException ('The "secretId" property must be set.');
         }
-        if (empty ($this->accessKey)) {
-            throw new InvalidConfigException ('The "accessKey" property must be set.');
+        if (empty ($this->secretKey)) {
+            throw new InvalidConfigException ('The "secretKey" property must be set.');
         }
-        if (empty ($this->queue)) {
-            throw new InvalidConfigException ('The "queue" property must be set.');
+        if (empty ($this->queueName)) {
+            throw new InvalidConfigException ('The "queueName" property must be set.');
         }
     }
 
