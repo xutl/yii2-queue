@@ -2,6 +2,7 @@
 
 namespace xutl\queue\qcloud;
 
+use xutl\qcloud\Client;
 use yii\queue\cli\Signal;
 use yii\base\NotSupportedException;
 use yii\base\InvalidConfigException;
@@ -15,7 +16,7 @@ class Queue extends \yii\queue\cli\Queue
     /**
      * @var string 服务主机名
      */
-    public $serverHost;
+    public $serverHost = 'api.qcloud.com';
 
     /**
      * 区域参数
@@ -26,17 +27,23 @@ class Queue extends \yii\queue\cli\Queue
     /**
      * @var string
      */
-    public $secretId;
+    public $accessId;
 
     /**
      * @var string
      */
-    public $secretKey;
+    public $accessKey;
 
     /**
      * @var string queue name
      */
-    public $queueName;
+    public $queue;
+
+    /**
+     * 请求的Uri
+     * @var string
+     */
+    public $serverUri = '/v2/index.php';
 
     /**
      * @var bool 是否使用安全连接
@@ -54,17 +61,17 @@ class Queue extends \yii\queue\cli\Queue
     public function init()
     {
         parent::init();
-        if (empty ($this->serverHost)) {
-            throw new InvalidConfigException ('The "serverHost" property must be set.');
+        if (empty ($this->region)) {
+            throw new InvalidConfigException ('The "region" property must be set.');
         }
         if (empty ($this->secretId)) {
             throw new InvalidConfigException ('The "secretId" property must be set.');
         }
-        if (empty ($this->secretKey)) {
-            throw new InvalidConfigException ('The "secretKey" property must be set.');
+        if (empty ($this->accessId)) {
+            throw new InvalidConfigException ('The "accessId" property must be set.');
         }
-        if (empty ($this->queueName)) {
-            throw new InvalidConfigException ('The "queueName" property must be set.');
+        if (empty ($this->queue)) {
+            throw new InvalidConfigException ('The "queue" property must be set.');
         }
     }
 
@@ -133,17 +140,26 @@ class Queue extends \yii\queue\cli\Queue
         throw new NotSupportedException('Status is not supported in the driver.');
     }
 
+    /**
+     * @var Client
+     */
     private $_qcloud;
 
     /**
      * 获取队列
-     * @return \AliyunMNS\Queue
+     * @return Client
      */
     public function getQueue()
     {
         if (!$this->_qcloud) {
-            $client = new HttpClient($this->endPoint, $this->accessId, $this->accessKey, $this->securityToken);
-            $this->_qcloud = new \AliyunMNS\Queue($client, $this->queueName, false);
+            $this->_qcloud = (new Client([
+                'serverHost' => 'cmq-queue-' . $this->region . 'api.qcloud.com',
+                'secretId' => $this->accessId,
+                'secretKey' => $this->accessKey,
+                'secureConnection' => $this->secureConnection,
+                'serverUri' => $this->serverUri,
+                'region' => $this->region
+            ]))->createRequest()->setMethod('POST');
         }
         return $this->_qcloud;
     }

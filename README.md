@@ -44,6 +44,7 @@ Add following lines to your main configuration file:
         'queue2' => [
             'class' => 'xutl\queue\qcloud\Queue',
             'endPoint' => 'http://aabbcc.mns.cn-hangzhou.aliyuncs.com/',
+            'region' => 'bj',
             'accessId' => '1234567',
             'accessKey' => '654141234',
             'queue' => 'task',
