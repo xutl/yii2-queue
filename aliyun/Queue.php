@@ -1,17 +1,13 @@
 <?php
 
-namespace xutl\queue;
+namespace xutl\queue\aliyun;
 
 use yii\queue\cli\Signal;
-use yii\base\InvalidParamException;
 use yii\base\NotSupportedException;
 use yii\base\InvalidConfigException;
-use AliyunMNS\Config;
 use AliyunMNS\Http\HttpClient;
 use AliyunMNS\Requests\SendMessageRequest;
 use AliyunMNS\Exception\MnsException;
-use AliyunMNS\Model\SendMessageRequestItem;
-use AliyunMNS\Requests\BatchSendMessageRequest;
 
 /**
  * Class Queue

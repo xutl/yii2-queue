@@ -24,7 +24,7 @@ composer require --prefer-dist xutl/yii2-queue
 or add
 
 ```json
-"xutl/yii2-queue": "~1.0.0"
+"xutl/yii2-queue": "~2.0.0"
 ```
 
 to the `require` section of your composer.json.
@@ -36,7 +36,7 @@ Add following lines to your main configuration file:
 ```php
     'components' => [
         'queue' => [
-            'class' => 'xutl\queue\Queue',
+            'class' => 'xutl\queue\aliyun\Queue',
             'endPoint' => 'http://aabbcc.mns.cn-hangzhou.aliyuncs.com/',
             'accessId' => '1234567',
             'accessKey' => '654141234',
