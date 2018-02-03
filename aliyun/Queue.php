@@ -2,7 +2,7 @@
 
 namespace xutl\queue\aliyun;
 
-use yii\queue\cli\Signal;
+use yii\queue\cli\SignalLoop;
 use yii\base\NotSupportedException;
 use yii\base\InvalidConfigException;
 use AliyunMNS\Http\HttpClient;
@@ -93,7 +93,7 @@ class Queue extends \yii\queue\cli\Queue
      */
     public function listen()
     {
-        while (!Signal::isExit()) {
+        while (!SignalLoop::isExit()) {
             try {
                 if ($payload = $this->getQueue()->receiveMessage(3)) {
                     if ($payload->isSucceed()) {

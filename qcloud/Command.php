@@ -32,4 +32,14 @@ class Command extends CliCommand
     {
         $this->queue->listen();
     }
+
+    /**
+     * @param string $actionID
+     * @return bool
+     * @since 2.0.2
+     */
+    protected function isWorkerAction($actionID)
+    {
+        return in_array($actionID, ['run' ,'listen'], true);
+    }
 }

@@ -3,7 +3,7 @@
 namespace xutl\queue\qcloud;
 
 use xutl\qcloud\Client;
-use yii\queue\cli\Signal;
+use yii\queue\cli\SignalLoop;
 use yii\base\NotSupportedException;
 use yii\base\InvalidConfigException;
 
@@ -13,42 +13,21 @@ use yii\base\InvalidConfigException;
  */
 class Queue extends \yii\queue\cli\Queue
 {
-    /**
-     * @var string 服务主机名
-     */
-    public $serverHost = 'api.qcloud.com';
-
-    /**
-     * 区域参数
-     * @var string
-     */
-    public $region;
 
     /**
      * @var string
      */
-    public $accessId;
+    public $secretId;
 
     /**
      * @var string
      */
-    public $accessKey;
+    public $secretKey;
 
     /**
      * @var string queue name
      */
     public $queue;
-
-    /**
-     * 请求的Uri
-     * @var string
-     */
-    public $serverUri = '/v2/index.php';
-
-    /**
-     * @var bool 是否使用安全连接
-     */
-    public $secureConnection = true;
 
     /**
      * @var string command class name
@@ -152,14 +131,8 @@ class Queue extends \yii\queue\cli\Queue
     public function getQueue()
     {
         if (!$this->_qcloud) {
-            $this->_qcloud = (new Client([
-                'serverHost' => 'cmq-queue-' . $this->region . 'api.qcloud.com',
-                'secretId' => $this->accessId,
-                'secretKey' => $this->accessKey,
-                'secureConnection' => $this->secureConnection,
-                'serverUri' => $this->serverUri,
-                'region' => $this->region
-            ]))->createRequest()->setMethod('POST');
+            $client = new HttpClient($this->endPoint, $this->secretId, $this->secretKey);
+            $this->_qcloud = new \xutl\cmq\Queue($client, $this->queue, false);
         }
         return $this->_qcloud;
     }
